@@ -48,4 +48,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getUserImageAttribute()
+    {
+        // Check if the photo attribute is null or empty
+        if (!$this->photo) {
+            return asset('upload/no_image.jpg');
+        }
+        // Check if the file exists in the specified path
+        if (!file_exists(public_path('upload/admin_images/' . $this->photo))) {
+            return asset('upload/no_image.jpg');
+        }
+        return asset('upload/admin_images/' . $this->photo);
+    } //end of getUserImageAttribute
+  
 }
