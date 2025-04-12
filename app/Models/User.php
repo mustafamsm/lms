@@ -51,15 +51,24 @@ class User extends Authenticatable
 
     public function getUserImageAttribute()
     {
+        // Determine the folder based on the user's role
+        $folder = match ($this->role) {
+            'admin' => 'admin_images',
+            'instructor' => 'instructor_images',
+            'user' => 'user_images',
+            default => 'no_image',
+        };
+
         // Check if the photo attribute is null or empty
         if (!$this->photo) {
             return asset('upload/no_image.jpg');
         }
+
         // Check if the file exists in the specified path
-        if (!file_exists(public_path('upload/admin_images/' . $this->photo))) {
+        if (!file_exists(public_path("upload/{$folder}/" . $this->photo))) {
             return asset('upload/no_image.jpg');
         }
-        return asset('upload/admin_images/' . $this->photo);
+
+        return asset("upload/{$folder}/" . $this->photo);
     } //end of getUserImageAttribute
-  
 }

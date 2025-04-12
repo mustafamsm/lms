@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
@@ -54,7 +55,10 @@ class AdminController extends Controller
                 $file=$request->file('photo');
                 @unlink(public_path('upload/admin_images/'.$data->photo));
                 $filename=date('YmdHi').$file->getClientOriginalName();
-                $file->move(public_path('upload/admin_images'),$filename);
+             
+            if (!File::exists(public_path('upload/instructor_images'))) {
+                File::makeDirectory(public_path('upload/instructor_images'), 0755, true);
+            }
                 $data['photo']=$filename;
             }
             $notification = array(

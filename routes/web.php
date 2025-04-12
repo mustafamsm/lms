@@ -32,12 +32,13 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
+
+// Admin Routes
 Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])
         ->name('admin.dashboard');
     Route::get('/admin.logout', [AdminController::class, 'logout'])
         ->name('admin.logout');
-
     Route::get('/admin/profile', [AdminController::class, 'profile'])
         ->name('admin.profile');
     Route::post('/admin/profile/store', [AdminController::class, 'ProfileStore'])
@@ -48,11 +49,29 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::post('/admin/password/update', [AdminController::class, "passwordUpdate"])
         ->name('admin.password.update');
 });
-
 Route::get('/admin/login', [AdminController::class, 'login'])
     ->name('admin.login');
 
+
+// Instructor Routes
 Route::middleware(['auth', 'roles:instructor'])->group(function () {
     Route::get('/instructor/dashboard', [InstructorController::class, 'index'])
         ->name('instructor.dashboard');
+
+        Route::get('/instructor/logout', [InstructorController::class, 'logout'])
+        ->name('instructor.logout');
+        
+        Route::get('/instructor/profile', [InstructorController::class, 'profile'])
+        ->name('instructor.profile');
+    Route::post('/instructor/profile/store', [InstructorController::class, 'ProfileStore'])
+        ->name('instructor.profile.store');
+
+        Route::get('/instructor/change/password', [InstructorController::class, 'ChangePassword'])
+        ->name('instructor.change.password');
+    Route::post('/instructor/password/update', [InstructorController::class, "passwordUpdate"])
+        ->name('instructor.password.update');  
+
+
 });
+Route::get('/instructor/login', [InstructorController::class, 'login'])
+    ->name('instructor.login');
