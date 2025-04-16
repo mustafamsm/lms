@@ -33,11 +33,18 @@
                             </button>
                         </div>
                         <ul class="generic-list-item d-flex flex-wrap align-items-center fs-14 border-left border-left-gray pl-3 ml-3">
+                            @auth
+                            <li class="d-flex align-items-center pr-3 mr-3 border-right border-right-gray"><i class="la la-user mr-1"></i><a href="{{route('dashboard')}}"> {{ Auth::user()->name }}</a></li>
+                            <li class="d-flex align-items-center pr-3 mr-3 border-right border-right-gray"><i class="la la-sign-out mr-1"></i><a href="{{route('user.logout')}}"> Logout</a></li>
+
+                            @else
                             <li class="d-flex align-items-center pr-3 mr-3 border-right border-right-gray"><i class="la la-sign-in mr-1"></i><a href="{{route('login')}}"> Login</a></li>
+                          
                             <li class="d-flex align-items-center"><i class="la la-user mr-1"></i><a href="{{route('register')}}"> Register</a></li>
+                       @endauth
                         </ul>
                     </div><!-- end header-widget -->
-                </div><!-- end col-lg-6 -->
+                </div><!-- end col-lg-6 --> 
             </div><!-- end row -->
         </div><!-- end container-fluid -->
     </div><!-- end header-top -->
