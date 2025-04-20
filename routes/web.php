@@ -66,8 +66,8 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
                 Route::get('/category/all', 'index')->name('category.all');
                 Route::get('/category/add', 'create')->name('category.add');
                 Route::post('/category/store', 'store')->name('category.store');
-                Route::get('/category/edit/{id}', 'edit')->name('category.edit');
-                Route::patch('/category/update', 'update')->name('category.update');
+                Route::get('/category/edit/{slug}', 'edit')->name('category.edit');
+                Route::put('/category/update/{id}', 'update')->name('category.update');
                 Route::delete('/category/delete/{id}', 'destroy')->name('category.delete');
          
 

@@ -35,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($categories as $keys=> $category )
+                        @forelse($categories as $key=> $category )
                             <tr>
                                 <td>{{$key+1}}</td>
                                 <td>
@@ -44,12 +44,15 @@
                                 <td>{{$category->category_name}}</td>
                                 
                                 <td>
-                                    <a href="{{ route('category.edit', $category->id) }}" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('category.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                    <a href="{{ route('category.edit', $category->category_slug) }}" class="btn btn-warning">Edit</a>
+                                    
+                                    <form action="{{ route('category.delete', $category->id) }}" method="POST" style="display:inline;" class="delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                        <button type="button" class="btn btn-danger delete-btn">Delete</button>
                                     </form>
+
+                                   
                                 </td>
                             </tr>
                         @empty
@@ -75,5 +78,6 @@
 
 
 </div>
+
 
 @endsection

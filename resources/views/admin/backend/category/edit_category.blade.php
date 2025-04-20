@@ -9,7 +9,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Categorye</li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Categorye</li>
                 </ol>
             </nav>
         </div>
@@ -19,12 +19,13 @@
   
     <div class="card">
         <div class="card-body p-4">
-            <h5 class="mb-4">Add Categorye</h5>
-            <form id="myForm" class="row g-3" method="POST" action="{{ route('category.store') }}" enctype="multipart/form-data">
+            <h5 class="mb-4">Edit {{$category->category_name}}</h5>
+            <form id="myForm" class="row g-3" method="POST" action="{{ route('category.update',$category->id) }}" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="form-group col-md-6">
                     <label for="input1" class="form-label">Category Name</label>
-                    <input type="text" class="form-control" id="input1" placeholder="Category Name" name="category_name" >
+                    <input type="text" class="form-control" id="input1" placeholder="Category Name" name="category_name" value="{{$category->category_name}}">
                 </div>
                 <div class="col-md-6">
 
@@ -34,7 +35,7 @@
                     <input type="file" class="form-control" id="image"  name="image" >
                 </div>
                 <div class="col-md-6">
-                    <img id="showImage" src="{{url('upload/no_image.jpg')}}" alt="" class="rounded-circle p-1 bg-primary" width="80">
+                    <img id="showImage" src="{{asset($category->image)}}" alt="" class="rounded-circle p-1 bg-primary" width="80">
                 </div>
                 
                
@@ -55,12 +56,10 @@
         $('#myForm').validate({
             rules: {
                 category_name: {  
-
+                    
                     required : true,
                 }, 
-                 image:{
-                    required:true,
-                }
+                
 
                 
             },
@@ -68,12 +67,8 @@
                 category_name: { 
                     required : 'Please Enter Category Name',
                 }, 
-                image:{
-                    required:"Please Select Category Image"
-                }
-                 
+               
 
-                
              
             },
             errorElement : 'span', 
