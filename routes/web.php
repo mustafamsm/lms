@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -23,10 +24,10 @@ Route::get('/',[UserController::class,'index'])
 
 Route::get('/dashboard', function () {
     return view('frontend.dashboard.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'roles:user'])->name('dashboard');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'roles:user'])->group(function () {
     Route::get('/user/profile',[UserController::class,'UserProfile'])
     ->name('user.profile');
     Route::post('/user/profile/update',[UserController::class,'UserProfileUpdate'])
@@ -56,8 +57,21 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/admin/change/password', [AdminController::class, 'ChangePassword'])
         ->name('admin.change.password');
-    Route::post('/admin/password/update', [AdminController::class, "passwordUpdate"])
+    Route::put('/admin/password/update', [AdminController::class, "passwordUpdate"])
         ->name('admin.password.update');
+
+        //category all routes
+ 
+            Route::controller(CategoryController::class)->group(function(){
+                Route::get('/category/all', 'index')->name('category.all');
+                Route::get('/category/add', 'create')->name('category.add');
+                Route::post('/category/store', 'store')->name('category.store');
+                Route::get('/category/edit/{id}', 'edit')->name('category.edit');
+                Route::patch('/category/update', 'update')->name('category.update');
+                Route::delete('/category/delete/{id}', 'destroy')->name('category.delete');
+         
+
+        });
 });
 Route::get('/admin/login', [AdminController::class, 'login'])
     ->name('admin.login');
@@ -81,6 +95,8 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
     Route::post('/instructor/password/update', [InstructorController::class, "passwordUpdate"])
         ->name('instructor.password.update');  
 
+
+        
 
 });
 Route::get('/instructor/login', [InstructorController::class, 'login'])
