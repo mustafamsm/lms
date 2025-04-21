@@ -30,7 +30,7 @@
             <ul>
                 <li> <a href="{{route('category.all')}}"><i class='bx bx-radio-circle'></i>All Categories</a>
                 </li>
-                <li> <a href="ecommerce-products-details.html"><i class='bx bx-radio-circle'></i>Add Categories</a>
+                <li> <a href="{{route('subcategory.all')}}"><i class='bx bx-radio-circle'></i>All SubCategories</a>
                 </li>
                
             </ul>

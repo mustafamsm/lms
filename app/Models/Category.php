@@ -15,6 +15,20 @@ class Category extends Model
         'image',
     ];
 
-   
-    
+    public function subcategories()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id', 'id');
+    }
+    protected static function booted()
+    {
+        static::deleting(function ($category) {
+            
+            // Delete subcategory images
+            foreach ($category->subcategories as $sub) {
+                if ($sub->image && file_exists($sub->image)) {
+                    unlink($sub->image);
+                }
+            }
+        });
+    }
 }

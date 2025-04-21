@@ -69,9 +69,20 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
                 Route::get('/category/edit/{slug}', 'edit')->name('category.edit');
                 Route::put('/category/update/{id}', 'update')->name('category.update');
                 Route::delete('/category/delete/{id}', 'destroy')->name('category.delete');
-         
+                        
 
         });
+        //subcategory routes
+        Route::controller(CategoryController::class)->group(function(){
+            Route::get('/subcategory/all', 'AllSubCategory')->name('subcategory.all');
+            Route::get('/subcategory/add', 'AddSubCategory')->name('subcategory.add');
+            Route::post('/subcategory/store', 'StoreSubCategory')->name('subcategory.store');
+            Route::get('/subcategory/edit/{slug}', 'EditSubCategory')->name('subcategory.edit');
+            Route::put('/subcategory/update/{id}', 'UpdateSubCategory')->name('subcategory.update');
+            Route::delete('/subcategory/delete/{id}', 'DeleteSubCategory')->name('subcategory.delete');
+                    
+
+    });
 });
 Route::get('/admin/login', [AdminController::class, 'login'])
     ->name('admin.login');
