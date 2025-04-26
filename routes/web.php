@@ -114,3 +114,9 @@ Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
 
 
+Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
+    ->name('become.instructor');
+Route::post('/instructor/register',[AdminController::class,'InstructorRegister'])
+->name('instructor.register');
+
+ 
