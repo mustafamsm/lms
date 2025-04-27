@@ -108,26 +108,26 @@ class AdminController extends Controller
         return view('frontend.instructor.reg_instructor');
     }
     public function InstructorRegister(Request $request)
-     {
+    {
         $request->validate([
-            'name'=>'required|string|max:255',
-            'username'=>'required|string|max:255|unique:users,username',
-            'phone'=>'required|string|max:255|unique:users,phone',
-            'address'=>'required|string|max:255',
-            'email'=>'required|string|email|unique:users,email',
-            'password'=>'required|string|min:8',
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username',
+            'phone' => 'required|string|max:255|unique:users,phone',
+            'address' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string|min:8',
 
         ]);
 
         User::create([
-            'name'=>$request->name,
-            'username'=>$request->username,
-            'phone'=>$request->phone,
-            'address'=>$request->address,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
-            'role'=>'instructor',
-            'status'=>'0',
+            'name' => $request->name,
+            'username' => $request->username,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'instructor',
+            'status' => '0',
         ]);
 
         $notification = array(
@@ -135,5 +135,25 @@ class AdminController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->route('instructor.login')->with($notification);
-     }
+    }
+
+    public function AllInstructor()
+    {
+        $instructors = User::where('role', 'instructor')->latest()->get();
+        return view('admin..backend.instructor.all_instructor', compact('instructors'));
+    }
+    public function UpdateUserStatus(Request $request)
+    {
+
+        $user = User::find($request->user_id);
+
+        $status = $request->input('status', 0);
+        if ($user) {
+            $user->status = $status;
+            $user->save();
+            return response()->json(['message' => 'Status updated successfully.']);
+        } else {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+    }
 }

@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/',[UserController::class,'index'])
-->name('index');
+Route::get('/', [UserController::class, 'index'])
+    ->name('index');
 
 Route::get('/dashboard', function () {
     return view('frontend.dashboard.index');
@@ -28,16 +28,16 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware(['auth', 'roles:user'])->group(function () {
-    Route::get('/user/profile',[UserController::class,'UserProfile'])
-    ->name('user.profile');
-    Route::post('/user/profile/update',[UserController::class,'UserProfileUpdate'])
-    ->name('user.profile.update');
-    Route::get('/user/logout',[UserController::class,'UserLogout'])
-    ->name('user.logout');
-    Route::get('/user/change/password',[UserController::class,'UserChangePassword'])
-    ->name('user.change.password');
-    Route::post('/user/password/update',[UserController::class,'UserPasswordUpdate'])
-    ->name('user.password.update');
+    Route::get('/user/profile', [UserController::class, 'UserProfile'])
+        ->name('user.profile');
+    Route::post('/user/profile/update', [UserController::class, 'UserProfileUpdate'])
+        ->name('user.profile.update');
+    Route::get('/user/logout', [UserController::class, 'UserLogout'])
+        ->name('user.logout');
+    Route::get('/user/change/password', [UserController::class, 'UserChangePassword'])
+        ->name('user.change.password');
+    Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])
+        ->name('user.password.update');
 });
 
 
@@ -60,28 +60,31 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::put('/admin/password/update', [AdminController::class, "passwordUpdate"])
         ->name('admin.password.update');
 
-        //category all routes
- 
-            Route::controller(CategoryController::class)->group(function(){
-                Route::get('/category/all', 'index')->name('category.all');
-                Route::get('/category/add', 'create')->name('category.add');
-                Route::post('/category/store', 'store')->name('category.store');
-                Route::get('/category/edit/{slug}', 'edit')->name('category.edit');
-                Route::put('/category/update/{id}', 'update')->name('category.update');
-                Route::delete('/category/delete/{id}', 'destroy')->name('category.delete');
-                        
+    //category all routes
 
-        });
-        //subcategory routes
-        Route::controller(CategoryController::class)->group(function(){
-            Route::get('/subcategory/all', 'AllSubCategory')->name('subcategory.all');
-            Route::get('/subcategory/add', 'AddSubCategory')->name('subcategory.add');
-            Route::post('/subcategory/store', 'StoreSubCategory')->name('subcategory.store');
-            Route::get('/subcategory/edit/{slug}', 'EditSubCategory')->name('subcategory.edit');
-            Route::put('/subcategory/update/{id}', 'UpdateSubCategory')->name('subcategory.update');
-            Route::delete('/subcategory/delete/{id}', 'DeleteSubCategory')->name('subcategory.delete');
-                    
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/category/all', 'index')->name('category.all');
+        Route::get('/category/add', 'create')->name('category.add');
+        Route::post('/category/store', 'store')->name('category.store');
+        Route::get('/category/edit/{slug}', 'edit')->name('category.edit');
+        Route::put('/category/update/{id}', 'update')->name('category.update');
+        Route::delete('/category/delete/{id}', 'destroy')->name('category.delete');
+    });
+    //subcategory routes
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/subcategory/all', 'AllSubCategory')->name('subcategory.all');
+        Route::get('/subcategory/add', 'AddSubCategory')->name('subcategory.add');
+        Route::post('/subcategory/store', 'StoreSubCategory')->name('subcategory.store');
+        Route::get('/subcategory/edit/{slug}', 'EditSubCategory')->name('subcategory.edit');
+        Route::put('/subcategory/update/{id}', 'UpdateSubCategory')->name('subcategory.update');
+        Route::delete('/subcategory/delete/{id}', 'DeleteSubCategory')->name('subcategory.delete');
+    });
 
+    //instructor all routes
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/all/instructor', 'AllInstructor')->name('all.instructor');
+        Route::post('/update/user/status', 'UpdateUserStatus')
+            ->name('update.user.status');
     });
 });
 Route::get('/admin/login', [AdminController::class, 'login'])
@@ -93,22 +96,18 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
     Route::get('/instructor/dashboard', [InstructorController::class, 'index'])
         ->name('instructor.dashboard');
 
-        Route::get('/instructor/logout', [InstructorController::class, 'logout'])
+    Route::get('/instructor/logout', [InstructorController::class, 'logout'])
         ->name('instructor.logout');
-        
-        Route::get('/instructor/profile', [InstructorController::class, 'profile'])
+
+    Route::get('/instructor/profile', [InstructorController::class, 'profile'])
         ->name('instructor.profile');
     Route::post('/instructor/profile/store', [InstructorController::class, 'ProfileStore'])
         ->name('instructor.profile.store');
 
-        Route::get('/instructor/change/password', [InstructorController::class, 'ChangePassword'])
+    Route::get('/instructor/change/password', [InstructorController::class, 'ChangePassword'])
         ->name('instructor.change.password');
     Route::post('/instructor/password/update', [InstructorController::class, "passwordUpdate"])
-        ->name('instructor.password.update');  
-
-
-        
-
+        ->name('instructor.password.update');
 });
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
@@ -116,7 +115,5 @@ Route::get('/instructor/login', [InstructorController::class, 'login'])
 
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');
-Route::post('/instructor/register',[AdminController::class,'InstructorRegister'])
-->name('instructor.register');
-
- 
+Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
+    ->name('instructor.register');
