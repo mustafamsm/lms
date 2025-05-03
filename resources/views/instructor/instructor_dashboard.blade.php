@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-<head>
+<head> 
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,18 +25,25 @@
 	<link rel="stylesheet" href="{{ asset('backend/assets/css/dark-theme.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('backend/assets/css/semi-dark.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('backend/assets/css/header-colors.css') }}"/>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" />
 
-	
-	<title>Instructor Dashboard</title>
+	<!-- Datatable -->
+	<link href="{{ asset('backend/assets/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+	<!-- End Datatable -->
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
+
+
+	<title>Instructor Dashboard </title>
 </head>
 
 <body>
 	<!--wrapper-->
 	<div class="wrapper">
 		<!--sidebar wrapper -->
-        @include('instructor.body.sidebar')
-		
+		@include('instructor.body.sidebar')
 		<!--end sidebar wrapper -->
 		<!--start header -->
 		@include('instructor.body.header')
@@ -56,8 +63,8 @@
 	</div>
 	<!--end wrapper-->
 
-
-	 
+ 
+	<!--end switcher-->
 	<!-- Bootstrap JS -->
 	<script src="{{ asset('backend/assets/js/bootstrap.bundle.min.js') }}"></script>
 	<!--plugins-->
@@ -71,6 +78,13 @@
 	<script src="{{ asset('backend/assets/js/index.js') }}"></script>
 	<!--app JS-->
 	<script src="{{ asset('backend/assets/js/app.js') }}"></script>
+
+	<script src="{{ asset('backend/assets/js/validate.min.js') }}"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<script src="{{ asset('backend/assets/js/code.js') }}"></script>
+
+	
 	<script>
 		new PerfectScrollbar(".app-container")
 	</script>
@@ -81,24 +95,47 @@
  @if(Session::has('message'))
  var type = "{{ Session::get('alert-type','info') }}"
  switch(type){
-	case 'info':
-	toastr.info(" {{ Session::get('message') }} ");
-	break;
+    case 'info':
+    toastr.info(" {{ Session::get('message') }} ");
+    break;
 
-	case 'success':
-	toastr.success(" {{ Session::get('message') }} ");
-	break;
+    case 'success':
+    toastr.success(" {{ Session::get('message') }} ");
+    break;
 
-	case 'warning':
-	toastr.warning(" {{ Session::get('message') }} ");
-	break;
+    case 'warning':
+    toastr.warning(" {{ Session::get('message') }} ");
+    break;
 
-	case 'error':
-	toastr.error(" {{ Session::get('message') }} ");
-	break; 
+    case 'error':
+    toastr.error(" {{ Session::get('message') }} ");
+    break; 
  }
  @endif 
 </script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<!--Datatable-->
+<script src="{{ asset('backend/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+	<script src="{{ asset('backend/assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+	<script>
+		$(document).ready(function() {
+			$('#example').DataTable();
+		  } );
+	</script>
+	<!--End Datatable-->
+	<script src="https://cdn.tiny.cloud/1/7cocc5bavja54pdf6t0zcgq9q9wv4s536g86qvp5eguyl673/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+	<script>
+	  tinymce.init({
+		selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+		plugins: 'code table lists',
+		toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+	  });
+	</script>
+	
 </body>
 
 </html>

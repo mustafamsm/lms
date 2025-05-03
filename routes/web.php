@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Backend\CategoryController;
-use App\Http\Controllers\InstructorController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\Backend\CourseController;
+use App\Http\Controllers\Backend\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +109,19 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
         ->name('instructor.change.password');
     Route::post('/instructor/password/update', [InstructorController::class, "passwordUpdate"])
         ->name('instructor.password.update');
+    Route::controller(CourseController::class)->group(function () {
+        Route::get('/all/course','index')->name('all.course');
+        Route::get('/add/course','create')->name('add.course');
+        Route::post('/store/course','store')->name('store.course');
+        Route::get('/edit/course/{id}','edit')->name('edit.course');
+        Route::put('/update/course/{id}','update')->name('update.course');
+        Route::get('/delete/course/{id}','destroy')->name('delete.course');
+
+        Route::put('/goals/{id}', [CourseController::class, 'updateGoal'])->name('update.goal');
+
+
+        Route::get('/subcategory/ajax/{category_id}','GetSubCategory')->name('get.subcategory');
+    });
 });
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');

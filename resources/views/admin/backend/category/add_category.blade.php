@@ -24,7 +24,7 @@
                 @csrf
                 <div class="form-group col-md-6">
                     <label for="input1" class="form-label">Category Name</label>
-                    <input type="text" class="form-control" id="input1" placeholder="Category Name" name="category_name" >
+                    <input type="text" class="form-control " id="input1" placeholder="Category Name" name="category_name" >
                 </div>
                 <div class="col-md-6">
 
