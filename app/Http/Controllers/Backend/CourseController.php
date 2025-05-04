@@ -24,9 +24,12 @@ class CourseController extends Controller
     {
         $id = Auth::user()->id;
         $courses = Course::where('instructor_id', $id)
-        ->with('goals')
-        ->orderBy('id', 'desc')
-        ->get();
+            ->with('goals')
+            ->with('category')
+
+
+            ->orderBy('id', 'desc')
+            ->get();
 
         return view('instructor.courses.all_course', compact('courses'));
     }
@@ -51,7 +54,7 @@ class CourseController extends Controller
         if (!File::exists(public_path($thumbnailPath))) {
             File::makeDirectory(public_path($thumbnailPath), 0755, true);
         }
-        
+
         if (!File::exists(public_path($videoPath))) {
             File::makeDirectory(public_path($videoPath), 0755, true);
         }
@@ -78,13 +81,11 @@ class CourseController extends Controller
         // Handle course image upload
         if ($request->hasFile('course_image')) {
             $course->course_image = $this->uploadFile($request->file('course_image'), $thumbnailPath, ['width' => 370, 'height' => 246]);
-
         }
-         
+
         // Handle course video upload
         if ($request->hasFile('video')) {
             $course->video = $this->uploadFile($request->file('video'), $videoPath);
-
         }
 
         // Save the course
@@ -98,6 +99,7 @@ class CourseController extends Controller
             return redirect()->back()->with($notification);
         }
 
+      
         // Course goals
         if ($request->has('course_goals')) {
             $goals = array_map(function ($goal) use ($course) {
@@ -108,7 +110,7 @@ class CourseController extends Controller
                     'updated_at' => now(),
                 ];
             }, $request->course_goals);
-    
+
             Course_goal::insert($goals);
         }
 
@@ -132,7 +134,12 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        $course = Course::findOrFail($id);
+        $course_goals = Course_goal::where('course_id', $id)->get();
+        $categories = Category::latest()->get();
+        $subcategories = SubCategory::where('category_id', $course->category_id)->get();
+        return view('instructor.courses.edit_course', compact('course', 'course_goals','categories', 'subcategories'));
     }
 
     /**
@@ -140,27 +147,152 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'course_name' => 'required|string|max:255',
+            'course_title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'required|exists:sub_categories,id',
+            'selling_price' => 'required|numeric',
+            'discount_price' => 'nullable|numeric',
+            'duration' => 'required|string|max:255',
+            'resources' => 'nullable|string|max:255',
+            'label' => 'nullable|string|max:255',
+            'prerequisites' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'certificate' => 'nullable|string',
+            'bestseller' => 'nullable|boolean',
+            'featured' => 'nullable|boolean',
+            'highestrated' => 'nullable|boolean',
+
+        ]);
+        $course = Course::findOrFail($id)->update([
+            'course_name' => $request->course_name,
+            'course_name_slug' => Str::slug($request->course_name, '-'),
+            'course_title' => $request->course_title,
+            'category_id' => $request->category_id,
+            'subcategory_id' => $request->subcategory_id,
+            'instructor_id' => Auth::user()->id,
+            'selling_price' => $request->selling_price,
+            'discount_price' => $request->discount_price,
+            'duration' => $request->duration,
+            'resources' => $request->resources,
+            'label' => $request->label,
+            'prerequisites' => $request->prerequisites,
+            'description' => $request->description,
+            'certificate' => $request->certificate,
+            'highestrated' => $request->highestrated,
+            'bestseller' => $request->bestseller,
+            'featured' => $request->featured,
+        ]);
+
+
+        $notification = array(
+            'message' => 'Course updated successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.course')->with($notification);
     }
 
+    public function updateCourseImage(Request $request,$id) {
+        $request->validate([
+            'course_image'=>'nullable|mimes:png,jpg,jpeg',
+        ]);
+        $course = Course::findOrFail($id);
+        if($request->hasFile('course_image')){
+            if (File::exists($course->course_image)) {
+                File::delete($course->course_image);
+            }
+            $thumbnailPath = 'upload/course/thumbnail/';
+            $course->course_image = $this->uploadFile($request->file('course_image'), $thumbnailPath, ['width' => 370, 'height' => 246]);
+        }
+        $course->save();
+        $notification = array(
+            'message' => 'Course image updated successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+    public function updateCourseVideo(Request $request,$id) {
+      
+        $request->validate([
+            'video'=>'nullable|mimes:mp4,mov,ogg,qt|max:102400',
+        ]);
+        
+        $course = Course::findOrFail($id);
+        
+        if($request->hasFile('video')){
+           
+            if (File::exists($course->video)) {
+                File::delete($course->video);
+            }
+            $videoPath = 'upload/course/video/';
+            $course->video = $this->uploadFile($request->file('video'), $videoPath);
+
+        }
+        $course->save();
+        $notification = array(
+            'message' => 'Course video updated successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+
+    public function updateCourseGoal(Request $request, $id)
+    {
+        $request->validate([
+            'course_goals' => 'required|array',
+            'course_goals.*' => 'string|max:255',
+        ]);
+        
+        if($request->course_goals==null){
+            return back();
+        }
+        Course_goal::where('course_id', $id)->delete();        
+       foreach ($request->course_goals as $goal) {
+            Course_goal::create([
+                'course_id' => $id,
+                'goal_name' => $goal,
+            ]);
+        }
+        $notification = array(
+            'message' => 'Course goals updated successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
     /**
+     * 
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $course = Course::findOrFail($id);
+        if (File::exists($course->course_image)) {
+            File::delete($course->course_image);
+        }
+        if (File::exists($course->video)) {
+            File::delete($course->video);
+        }
+        $course->delete();
+        Course_goal::where('course_id', $id)->delete();
+        $notification = array(
+            'message' => 'Course deleted successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
-    public function updateGoal(Request $request,$id){
+    public function updateGoal(Request $request, $id)
+    {
         $request->validate([
             'goal_name' => 'required|string|max:255',
         ]);
-    
+
         $goal = Course_Goal::findOrFail($id);
         $goal->goal_name = $request->goal_name;
         $goal->save();
-        
-      
+
+
         $notification = array(
             'message' => 'Goals Updated successfully',
             'alert-type' => 'success'

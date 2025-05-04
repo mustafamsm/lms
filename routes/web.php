@@ -115,8 +115,16 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
         Route::post('/store/course','store')->name('store.course');
         Route::get('/edit/course/{id}','edit')->name('edit.course');
         Route::put('/update/course/{id}','update')->name('update.course');
-        Route::get('/delete/course/{id}','destroy')->name('delete.course');
+        Route::delete('/course/{id}','destroy')->name('delete.course');
 
+        Route::put('/update/course/image/{id}', 'updateCourseImage')
+            ->name('update.course.image');
+        Route::put('/update/course/video/{id}', 'updateCourseVideo')
+            ->name('update.course.video');
+        Route::put('/update/course/goals/{id}', 'updateCourseGoal')
+            ->name('update.course.goals');
+
+        //for course goals ajax update
         Route::put('/goals/{id}', [CourseController::class, 'updateGoal'])->name('update.goal');
 
 

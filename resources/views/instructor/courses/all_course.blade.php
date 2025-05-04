@@ -43,7 +43,7 @@
                                     <td> <img src="{{ asset($item->course_image) }}" alt=""
                                             style="width: 70px; height:40px;"> </td>
                                     <td>{{ $item->course_name }}</td>
-                                    <td>{{ $item->category_id }}</td>
+                                    <td>{{ $item->category->category_name }}</td>
                                     <td>{{ $item->selling_price }}</td>
                                     <td>{{ $item->discount_price }}</td>
                                     <td>
@@ -53,8 +53,9 @@
                                             data-name="{{ $item->course_name }}" data-goals="{{ $item->goals }}">
                                             View Goals
                                         </button>
-                                        <a href="{{ route('delete.course', $item->id) }}" class="btn btn-danger px-5"
-                                            id="delete">Delete </a>
+                                        <button class="btn btn-danger px-5 delete-course" data-id="{{ $item->id }}">
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -91,7 +92,7 @@
         <script>
             // Pass data to the modal
             const goalsModal = document.getElementById('goalsModal');
-            goalsModal.addEventListener('show.bs.modal', function (event) {
+            goalsModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget; // Button that triggered the modal
                 const courseName = button.getAttribute('data-name'); // Extract course name
                 const goals = JSON.parse(button.getAttribute('data-goals')); // Extract goals (JSON)
@@ -109,48 +110,75 @@
                     li.classList.add('d-flex', 'justify-content-between', 'align-items-center');
                     li.innerHTML = `
                         <span class="goal-name">${goal.goal_name}</span>
-                        <div class="goal-actions">
-                            <!-- Edit Button -->
-                            <button class="btn btn-sm btn-warning edit-goal">Edit</button>
-                            <!-- Delete Form -->
-                            <form method="POST" action="/goals/${goal.id}" class="d-inline delete-goal-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </div>
+                        
                     `;
                     goalsListElement.appendChild(li);
 
                     // Add event listener for the Edit button
-                    const editButton = li.querySelector('.edit-goal');
-                    editButton.addEventListener('click', function () {
-                        const goalNameElement = li.querySelector('.goal-name');
-                        const goalActionsElement = li.querySelector('.goal-actions');
+                    // const editButton = li.querySelector('.edit-goal');
+                    // editButton.addEventListener('click', function () {
+                    //     const goalNameElement = li.querySelector('.goal-name');
+                    //     const goalActionsElement = li.querySelector('.goal-actions');
 
-                        // Replace the goal name with an input field
-                        goalNameElement.innerHTML = `
-                            <form method="POST" action="/goals/${goal.id}" class="d-inline edit-goal-form">
-                                @csrf
-                                @method('PUT')
-                                <input type="text" name="goal_name" value="${goal.goal_name}" class="form-control d-inline-block" style="width: auto;">
-                                <button type="submit" class="btn btn-sm btn-success">Save</button>
-                                <button type="button" class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
-                            </form>
-                        `;
+                    //     // Replace the goal name with an input field
+                    //     goalNameElement.innerHTML = `
+            //         <form method="POST" action="/goals/${goal.id}" class="d-inline edit-goal-form">
+            //             @csrf
+            //             @method('PUT')
+            //             <input type="text" name="goal_name" value="${goal.goal_name}" class="form-control d-inline-block" style="width: auto;">
+            //             <button type="submit" class="btn btn-sm btn-success">Save</button>
+            //             <button type="button" class="btn btn-sm btn-secondary cancel-edit">Cancel</button>
+            //         </form>
+            //     `;
 
-                        // Hide the Edit and Delete buttons
-                        goalActionsElement.style.display = 'none';
+                    //     // Hide the Edit and Delete buttons
+                    //     goalActionsElement.style.display = 'none';
 
-                        // Add event listener for the Cancel button
-                        const cancelButton = goalNameElement.querySelector('.cancel-edit');
-                        cancelButton.addEventListener('click', function () {
-                            // Restore the original goal name and actions
-                            goalNameElement.textContent = goal.goal_name;
-                            goalActionsElement.style.display = 'flex';
-                        });
-                    });
+                    //     // Add event listener for the Cancel button
+                    //     const cancelButton = goalNameElement.querySelector('.cancel-edit');
+                    //     cancelButton.addEventListener('click', function () {
+                    //         // Restore the original goal name and actions
+                    //         goalNameElement.textContent = goal.goal_name;
+                    //         goalActionsElement.style.display = 'flex';
+                    //     });
+                    // });
                 });
+            });
+        </script>
+        <script>
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-course')) {
+                    e.preventDefault();
+
+                    const courseId = e.target.getAttribute('data-id'); // Get course ID
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit the delete request
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = `/course/${courseId}`;
+                            form.innerHTML = `
+                                @csrf
+                                @method('DELETE')
+                            `;
+                            document.body.appendChild(form);
+                            form.submit();
+
+                        }
+                    })
+                    
+
+                    ;
+                }
             });
         </script>
     </div>

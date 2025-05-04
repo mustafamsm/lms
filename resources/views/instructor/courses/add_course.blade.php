@@ -393,14 +393,27 @@
 
         $(document).ready(function() {
             var counter = 0;
+
+            // Add more goals
             $(document).on("click", ".addeventmore", function() {
                 var whole_extra_item_add = $("#whole_extra_item_add").html();
                 $(this).closest(".add_item").append(whole_extra_item_add);
                 counter++;
             });
+
+            // Remove goals
             $(document).on("click", ".removeeventmore", function(event) {
-                $(this).closest("#whole_extra_item_delete").remove();
-                counter -= 1
+                $(this).closest(".whole_extra_item_delete").remove();
+                counter -= 1;
+            });
+
+            // Prevent empty goals from being submitted
+            $('#myForm').on('submit', function(e) {
+                $('input[name="course_goals[]"]').each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).remove();
+                    }
+                });
             });
         });
     </script>

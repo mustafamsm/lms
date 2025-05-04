@@ -29,10 +29,18 @@ class Course extends Model
         'status',
         'certificate',
     ];
-   
-public function goals(){
-    return $this->hasMany(Course_Goal::class,'course_id','id');
-}
 
+    public function goals()
+    {
+        return $this->hasMany(Course_Goal::class, 'course_id', 'id');
+    }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class, 'subcategory_id', 'id');
+    }
 }
