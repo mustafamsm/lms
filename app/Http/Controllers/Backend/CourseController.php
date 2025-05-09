@@ -8,11 +8,13 @@ use App\Models\Course_goal;
 use App\Models\SubCategory;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\CourseSection;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreCourseRequest;
+use App\Models\CourseLecture;
 use Intervention\Image\Laravel\Facades\Image;
 
 class CourseController extends Controller
@@ -99,7 +101,7 @@ class CourseController extends Controller
             return redirect()->back()->with($notification);
         }
 
-      
+
         // Course goals
         if ($request->has('course_goals')) {
             $goals = array_map(function ($goal) use ($course) {
@@ -139,7 +141,7 @@ class CourseController extends Controller
         $course_goals = Course_goal::where('course_id', $id)->get();
         $categories = Category::latest()->get();
         $subcategories = SubCategory::where('category_id', $course->category_id)->get();
-        return view('instructor.courses.edit_course', compact('course', 'course_goals','categories', 'subcategories'));
+        return view('instructor.courses.edit_course', compact('course', 'course_goals', 'categories', 'subcategories'));
     }
 
     /**
@@ -193,12 +195,13 @@ class CourseController extends Controller
         return redirect()->route('all.course')->with($notification);
     }
 
-    public function updateCourseImage(Request $request,$id) {
+    public function updateCourseImage(Request $request, $id)
+    {
         $request->validate([
-            'course_image'=>'nullable|mimes:png,jpg,jpeg',
+            'course_image' => 'nullable|mimes:png,jpg,jpeg',
         ]);
         $course = Course::findOrFail($id);
-        if($request->hasFile('course_image')){
+        if ($request->hasFile('course_image')) {
             if (File::exists($course->course_image)) {
                 File::delete($course->course_image);
             }
@@ -212,22 +215,22 @@ class CourseController extends Controller
         );
         return redirect()->back()->with($notification);
     }
-    public function updateCourseVideo(Request $request,$id) {
-      
+    public function updateCourseVideo(Request $request, $id)
+    {
+
         $request->validate([
-            'video'=>'nullable|mimes:mp4,mov,ogg,qt|max:102400',
+            'video' => 'nullable|mimes:mp4,mov,ogg,qt|max:102400',
         ]);
-        
+
         $course = Course::findOrFail($id);
-        
-        if($request->hasFile('video')){
-           
+
+        if ($request->hasFile('video')) {
+
             if (File::exists($course->video)) {
                 File::delete($course->video);
             }
             $videoPath = 'upload/course/video/';
             $course->video = $this->uploadFile($request->file('video'), $videoPath);
-
         }
         $course->save();
         $notification = array(
@@ -243,12 +246,12 @@ class CourseController extends Controller
             'course_goals' => 'required|array',
             'course_goals.*' => 'string|max:255',
         ]);
-        
-        if($request->course_goals==null){
+
+        if ($request->course_goals == null) {
             return back();
         }
-        Course_goal::where('course_id', $id)->delete();        
-       foreach ($request->course_goals as $goal) {
+        Course_goal::where('course_id', $id)->delete();
+        foreach ($request->course_goals as $goal) {
             Course_goal::create([
                 'course_id' => $id,
                 'goal_name' => $goal,
@@ -306,6 +309,102 @@ class CourseController extends Controller
         return response()->json($subcategories);
     }
 
+
+    //lecture actions
+
+    public function AddLecture($id)
+    {
+        $course = Course::with('sections')->findOrFail($id);
+
+        return view('instructor.courses.section.add_course_lecture', compact('course'));
+    }
+    public function StoreSection(Request $request, $id)
+    {
+        $request->validate([
+            'section_title' => 'required|string|max:255',
+        ]);
+        $course = Course::findOrFail($id);
+        $course->sections()->create([
+            'section_title' => $request->section_title,
+        ]);
+        $notification = array(
+            'message' => 'Section added successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+      
+ 
+    }
+
+    public function StoreLecture(Request $request, $course_id, $section_id)
+    {
+         $request->validate([
+            'lecture_title' => 'required|string|max:255',
+            'url'=>'required|string|url',
+            'content'=>'nullable|string',
+        ]);
+
+        
+        $course = Course::findOrFail($course_id);
+        $section = CourseSection::findOrFail($section_id);
+        $section->lectures()->create([
+            'lecture_title' => $request->lecture_title,
+            'url' => $request->url,
+            'content' => $request->content,
+            'course_id' => $course->id,
+        ]);
+         
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Lecture added successfully',
+        ]);
+    }
+    public function EditLecture($id){
+        $lecture=CourseLecture::findOrFail($id);
+        return view('instructor.courses.lecture.edit_lecture',compact('lecture'));
+    }
+    public function UpdateLecture(Request $request,$id){
+        $request->validate([
+            'lecture_title'=>'required|string|max:255',
+            'url'=>'required|string|url',
+            'content'=>'nullable|string'
+        ]);
+        $lecture=CourseLecture::findOrFail($id);
+        $lecture->update([
+            'lecture_title'=>$request->lecture_title,
+            'url'=>$request->url,
+            'content'=>$request->content
+        ]);
+        $notification = array(
+            'message' => 'Lecture Updated successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+      
+        
+
+    }
+    public function DeleteLecture($id){
+        
+        CourseLecture::findOrFail($id)->delete();
+        $notification = array(
+            'message' => 'Lecture Deleted successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+    public function DeleteSection($id){
+      $section= CourseSection::findOrFail($id);
+      $section->lectures()->delete();
+      $section->delete();
+
+ $notification = array(
+            'message' => 'Section Deleted successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+      
+    }
     private function uploadFile($file, $path, $resize = null)
     {
         $fileName = now()->format('YmdHi') . '_' . uniqid() . '.' . $file->getClientOriginalExtension();

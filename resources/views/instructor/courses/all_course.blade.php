@@ -47,15 +47,21 @@
                                     <td>{{ $item->selling_price }}</td>
                                     <td>{{ $item->discount_price }}</td>
                                     <td>
-                                        <a href="{{ route('edit.course', $item->id) }}" class="btn btn-info px-5">Edit </a>
-                                        <button class="btn btn-primary px-5" data-bs-toggle="modal"
+                                        <a href="{{ route('edit.course', $item->id) }}" class="btn btn-info " title="Edit Course">
+                                            <i class="lni lni-eraser"></i>
+                                        </a>
+                                        <button class="btn btn-primary" data-bs-toggle="modal" 
+                                        title="View Goals" 
                                             data-bs-target="#goalsModal" data-id="{{ $item->id }}"
                                             data-name="{{ $item->course_name }}" data-goals="{{ $item->goals }}">
-                                            View Goals
+                                            <i class="lni lni-checkmark-circle" ></i>
                                         </button>
-                                        <button class="btn btn-danger px-5 delete-course" data-id="{{ $item->id }}">
-                                            Delete
+                                        <button title="Delete Course" class="btn btn-danger delete-course" data-id="{{ $item->id }}">
+                                            <i class="lni lni-trash"></i>
                                         </button>
+                                        <a href="{{ route('add.course.lecture', $item->id) }}" class="btn btn-warning " title="Lecture">
+                                            <i class="lni lni-list"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

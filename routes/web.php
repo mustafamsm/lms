@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Models\Course;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +110,7 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
         ->name('instructor.change.password');
     Route::post('/instructor/password/update', [InstructorController::class, "passwordUpdate"])
         ->name('instructor.password.update');
+
     Route::controller(CourseController::class)->group(function () {
         Route::get('/all/course','index')->name('all.course');
         Route::get('/add/course','create')->name('add.course');
@@ -130,7 +132,24 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
         Route::get('/subcategory/ajax/{category_id}','GetSubCategory')->name('get.subcategory');
     });
-});
+    //course lecture routes
+    Route::controller(CourseController::class)->group(function () {
+        Route::get('/course/lecture/add/{id}', 'AddLecture')->name('add.course.lecture');
+        Route::post('/course/lecture/store', 'StoreLecture')->name('store.course.lecture');
+        Route::post('/course/section/{id}', 'StoreSection')->name('add.course.section');
+        Route::post('/course/{course_id}/section/{section_id}/lecture', 'StoreLecture')
+            ->name('store.course.lecture');
+        Route::get('/lecture/edit/{id}', 'EditLecture')
+            ->name('edit.lecture');
+        Route::put('/lecture/update/{id}','UpdateLecture')
+        ->name('update.lecture');
+        Route::delete('/lecture/delete/{id}', 'DeleteLecture')
+            ->name('delete.lecture');
+        Route::delete('/section/delete/{id}','DeleteSection')  
+        ->name('delete.section');  
+    });
+
+});// end instructor routes group middleware
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
 

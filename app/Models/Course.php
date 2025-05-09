@@ -43,4 +43,12 @@ class Course extends Model
     {
         return $this->belongsTo(SubCategory::class, 'subcategory_id', 'id');
     }
+    public function sections()
+    {
+        return $this->hasMany(CourseSection::class, 'course_id', 'id');
+    }
+    public function lectures()
+    {
+        return $this->hasMany(CourseLecture::class, 'course_id', 'id');
+    }
 }
