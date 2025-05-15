@@ -634,7 +634,7 @@
                             <div class="card-body">
                                 <h3 class="card-title fs-18 pb-2">Related Courses</h3>
                                 <div class="divider"><span></span></div>
-                                @foreach($course->category->courses()->where('id', '!=', $course->id)->latest()->limit(3)->get() as $related)
+                                @foreach($relatedCourses as $related)
                                     <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
                                         <a href="{{ url('course/details/' . $related->id . '/' . $related->course_name_slug) }}" class="media-img">
                                             <img class="mr-3 lazy" src="{{ asset('images/img-loading.png') }}"

@@ -12,6 +12,13 @@ class IndexController extends Controller
     public function CourseDetails($id,$slug){
         $course = Course::with('category','subcategory' ,'user','goals','lectures','sections')->findOrFail($id);
         $categories=Category::latest()->get();
-        return view('frontend.course.course_details',compact('course','categories'));
+        
+    $relatedCourses = $course->category
+        ->courses()
+        ->where('id', '!=', $course->id)
+        ->latest()
+        ->limit(3)
+        ->get();
+        return view('frontend.course.course_details',compact('course','categories','relatedCourses'));
     }
 }
