@@ -28,6 +28,7 @@ class Course extends Model
         'highestreated',
         'status',
         'certificate',
+        'instructore_id'
     ];
 
     public function goals()
@@ -51,4 +52,9 @@ class Course extends Model
     {
         return $this->hasMany(CourseLecture::class, 'course_id', 'id');
     }
+    public function user(){
+        return $this->belongsTo(User::class,'instructor_id','id');
+    }
+    
+
 }

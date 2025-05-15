@@ -71,4 +71,9 @@ class User extends Authenticatable
 
         return asset("upload/{$folder}/" . $this->photo);
     } //end of getUserImageAttribute
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'instructor_id');
+    }
 }

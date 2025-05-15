@@ -19,7 +19,7 @@
 <!--======================================
         START CATEGORY AREA
 ======================================-->
-@include('frontend.home.category-area')
+@include('frontend.home.category-area',$categories)
 <!--======================================
         END CATEGORY AREA
 ======================================-->
@@ -27,7 +27,7 @@
 <!--======================================
         START COURSE AREA
 ======================================-->
-@include('frontend.home.course-area')
+@include('frontend.home.course-area',[$categories,$allCourses])
 <!--======================================
         END COURSE AREA
 ======================================-->

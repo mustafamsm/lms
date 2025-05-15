@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Course;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -11,8 +13,12 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function index()
-    {
-        return view('frontend.index');
+    { 
+            $categories = Category::with(['courses' => function($query) {
+                $query->where('status', 1);
+            }])->latest()->take(6)->get();
+             $allCourses = Course::with('goals')->where('status', 1)->latest()->take(6)->get();
+        return view('frontend.index',compact('categories','allCourses'));
     }
 
     public  function UserProfile()

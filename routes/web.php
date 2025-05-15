@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Frontend\IndexController;
 use App\Models\Course;
 
 /*
@@ -150,6 +151,8 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
     });
 
 });// end instructor routes group middleware
+
+
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
 
@@ -158,3 +161,4 @@ Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');
 Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
     ->name('instructor.register');
+Route::get('/course/details/{id}/{slug}',[IndexController::class,'CourseDetails']);
