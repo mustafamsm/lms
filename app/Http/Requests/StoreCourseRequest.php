@@ -29,7 +29,7 @@ class StoreCourseRequest extends FormRequest
             'course_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5120', // Max 5MB
             'video' => 'nullable|mimes:mp4,mov,avi,wmv|max:102400', // Max 100MB
             'selling_price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:selling_price',
+            'discount_price' => 'nullable|numeric|min:0|lte:selling_price',
             'duration' => 'required|string|max:50',
             'resources' => 'nullable|string|max:500',
             'label' => 'nullable|in:Beginner,Intermediate,Expert',

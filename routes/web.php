@@ -155,10 +155,11 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
-
+    Route::get('/course/details/{id}/{slug}',[IndexController::class,'CourseDetails']);
+Route::get('/category/courses/{slug}',[IndexController::class,'CategoryCourse'])->name('category.details');
+Route::get('/subcategory/courses/{slug}',[IndexController::class,'SubCategoryCourse'])->name('subcategory.details');
 
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');
 Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
     ->name('instructor.register');
-Route::get('/course/details/{id}/{slug}',[IndexController::class,'CourseDetails']);
