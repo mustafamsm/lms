@@ -152,12 +152,13 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
 });// end instructor routes group middleware
 
-
+//home page routes
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
     Route::get('/course/details/{id}/{slug}',[IndexController::class,'CourseDetails']);
 Route::get('/category/courses/{slug}',[IndexController::class,'CategoryCourse'])->name('category.details');
 Route::get('/subcategory/courses/{slug}',[IndexController::class,'SubCategoryCourse'])->name('subcategory.details');
+Route::get('/instructor/details/{instructor}',[IndexController::class,'InstructorDetails'])->name('instructor.details');
 
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');

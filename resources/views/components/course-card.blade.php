@@ -34,7 +34,7 @@
                 href="{{ url('course/details/' . $course->id . '/' . $course->course_name_slug) }}">{{ $course->course_title }}</a>
         </h5>
         <p class="card-text">
-            <a href="teacher-detail.html">{{ $course->user->name }}</a>
+            <a href="{{route('instructor.details',$course->user->id)}}">{{ $course->user->name }}</a>
         </p>
         <div class="rating-wrap d-flex align-items-center py-2">
             <div class="review-stars">

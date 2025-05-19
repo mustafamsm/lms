@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\SubCategory;
 
 class IndexController extends Controller
 {
@@ -26,7 +27,7 @@ class IndexController extends Controller
     public function CategoryCourse($slug, Request $request)
     {
         $category = Category::where('category_slug', $slug)->firstOrFail();
-        $courses = $category->courses()->where('status', 1);
+        $courses = $category->courses();
 
         // Sorting logic
         switch ($request->sort) {
@@ -94,5 +95,9 @@ class IndexController extends Controller
 
           $courses = $courses->get();
       return view('frontend.category.subcategory_all',compact('courses','subcategory','categories'));
+    }
+    public function InstructorDetails(User $instructor){
+        $courses = $instructor->courses()->with('category', 'subcategory')->get();
+        return view('frontend.instructor.instructor_details',compact('instructor','courses'));
     }
 }
