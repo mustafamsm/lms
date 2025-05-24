@@ -8,6 +8,7 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Frontend\IndexController;
+use App\Http\Controllers\Frontend\WishListController;
 use App\Models\Course;
 
 /*
@@ -41,7 +42,10 @@ Route::middleware(['auth', 'roles:user'])->group(function () {
         ->name('user.change.password');
     Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])
         ->name('user.password.update');
-});
+
+     Route::get('user/wishlist',[WishListController::class,'AllWishlist'])->name('user.wishlist');
+     Route::delete('remove-from-wishlist/{id}',[WishListController::class,'removeFromWishlist']);
+ }); 
 
 
 require __DIR__ . '/auth.php';
@@ -159,7 +163,8 @@ Route::get('/instructor/login', [InstructorController::class, 'login'])
 Route::get('/category/courses/{slug}',[IndexController::class,'CategoryCourse'])->name('category.details');
 Route::get('/subcategory/courses/{slug}',[IndexController::class,'SubCategoryCourse'])->name('subcategory.details');
 Route::get('/instructor/details/{instructor}',[IndexController::class,'InstructorDetails'])->name('instructor.details');
-
+//wishlist ajax route
+Route::post('/add-to-wishlist/{id}',[WishListController::class,'AddToWishList']);
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');
 Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])

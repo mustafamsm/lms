@@ -13,12 +13,16 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function index()
-    { 
-            $categories = Category::with(['courses' => function($query) {
-                $query->where('status', 1);
-            }])->latest()->take(6)->get();
-             $allCourses = Course::with('goals')->where('status', 1)->latest()->take(6)->get();
-        return view('frontend.index',compact('categories','allCourses'));
+    {
+        $categories = Category::with(['courses' => function ($query) {
+            $query->where('status', 1);
+        }])->latest()->take(6)->get();
+        $allCourses = Course::with('goals')->where('status', 1)->latest()->take(6)->get();
+        $wishlistCourseIds = [];
+        if (auth()->check()) {
+            $wishlistCourseIds = \App\Models\Wishlist::where('user_id', auth()->id())->pluck('course_id')->toArray();
+        }
+        return view('frontend.index', compact('categories', 'allCourses','wishlistCourseIds'));
     }
 
     public  function UserProfile()
@@ -82,11 +86,13 @@ class UserController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-    public function UserChangePassword(){
+    public function UserChangePassword()
+    {
 
         return view('frontend.dashboard.change_password');
     }
-    public function UserPasswordUpdate(Request $request){
+    public function UserPasswordUpdate(Request $request)
+    {
         $request->validate([
             'old_password' => 'required',
             'new_password' => 'required|confirmed',

@@ -27,7 +27,7 @@
                     <div class="row">
                         @foreach ($allCourses->take(6) as $course)
                             <div class="col-lg-4 responsive-column-half">
-                              <x-course-card :course="$course"/>
+                              <x-course-card :course="$course" :wishlist="in_array($course->id, $wishlistCourseIds)"/>
                               
                             </div><!-- end col-lg-4 -->
                         @endforeach
@@ -41,7 +41,7 @@
                         <div class="row">
                             @foreach ($cat->courses->take(6) as $course)
                             <div class="col-lg-4 responsive-column-half">
-                               <x-course-card :course="$course"/>
+                               <x-course-card :course="$course" :wishlist="in_array($course->id, $wishlistCourseIds)"  />
                             </div>
                             @endforeach
                         </div><!-- end row -->

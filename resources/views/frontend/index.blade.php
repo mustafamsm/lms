@@ -27,7 +27,7 @@
 <!--======================================
         START COURSE AREA
 ======================================-->
-@include('frontend.home.course-area',[$categories,$allCourses])
+@include('frontend.home.course-area',[$categories,$allCourses,$wishlistCourseIds])
 <!--======================================
         END COURSE AREA
 ======================================-->

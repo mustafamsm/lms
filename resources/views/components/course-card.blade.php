@@ -34,7 +34,7 @@
                 href="{{ url('course/details/' . $course->id . '/' . $course->course_name_slug) }}">{{ $course->course_title }}</a>
         </h5>
         <p class="card-text">
-            <a href="{{route('instructor.details',$course->user->id)}}">{{ $course->user->name }}</a>
+            <a href="{{ route('instructor.details', $course->id) }}">{{ $course->user->name }}</a>
         </p>
         <div class="rating-wrap d-flex align-items-center py-2">
             <div class="review-stars">
@@ -57,8 +57,16 @@
                     <span class="before-price font-weight-medium">{{ $course->selling_price }}</span>
                 </p>
             @endif
-            <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i
-                    class="la la-heart-o"></i></div>
+            <div class="wishlist-action position-relative d-inline-block">
+                <button type="button"
+                    class="icon-element icon-element-sm shadow-sm cursor-pointer wishlist-btn {{ $wishlist ? 'wishlisted' : '' }}"
+                    data-course-id="{{ $course->id }}"
+                    title="{{ $wishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}">
+                    <i class="la {{ $wishlist ? 'la-heart' : 'la-heart-o' }}"></i>
+                </button>
+                <span class="spinner-border spinner-border-sm text-primary wishlist-spinner" style="display:none;"
+                    role="status"></span>
+            </div>
         </div>
     </div>
 </div>
