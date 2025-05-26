@@ -16,12 +16,12 @@
             @if ($course->discount_price == null)
                 <div class="course-badge">New</div>
             @endif
-            @if ($course->selling_price == $course->discount_price)
+            @if ($course->isFree())
                 <div class="course-badge green">Free</div>
             @endif
-            @if ($course->discount_price !== null && $course->selling_price > $course->discount_price)
+            @if ($course->discount_percentage)
                 <div class="course-badge blue">
-                    {{ round((($course->selling_price - $course->discount_price) / $course->selling_price) * 100) }}%
+                    {{ $course->discount_percentage }}%
 
                 </div>
             @endif
@@ -46,15 +46,30 @@
             <span class="rating-total pl-1">({{ $course->reviews_count }})</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-            @if ($course->selling_price == $course->discount_price)
+            @if ($course->isFree())
+                {{-- Case 1: Course is free --}}
                 <p class="card-price text-success font-weight-bold">Free</p>
-            @elseif ($course->discount_price == null)
+            @elseif ($course->hasDiscount())
+                {{-- Case 2: Course has an active discount --}}
                 <p class="card-price text-black font-weight-bold">
-                    ${{ $course->selling_price }}</p>
+                    {{-- Display the discounted price --}}
+                    ${{ number_format($course->effective_price, 2) }}
+
+                    {{-- Display the original price with a strikethrough --}}
+                    <span class="before-price font-weight-medium"
+                        style="text-decoration: line-through; margin-left: 5px;">
+                        ${{ number_format($course->selling_price, 2) }}
+                    </span>
+
+                    {{-- Display the discount percentage --}}
+                    <span class="discount-badge text-white bg-green-500 rounded-full px-2 py-1 text-xs ml-2">
+                        Save {{ $course->discount_percentage }}%
+                    </span>
+                </p>
             @else
+                {{-- Case 3: No discount, display original selling price --}}
                 <p class="card-price text-black font-weight-bold">
-                    ${{ $course->discount_price }}
-                    <span class="before-price font-weight-medium">{{ $course->selling_price }}</span>
+                    ${{ number_format($course->selling_price, 2) }}
                 </p>
             @endif
             <div class="wishlist-action position-relative d-inline-block">

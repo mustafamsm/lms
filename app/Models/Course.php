@@ -61,6 +61,28 @@ class Course extends Model
     public function user(){
         return $this->belongsTo(User::class,'instructor_id','id');
     }
-    
+    public function getEffectivePriceAttribute(){
+        if($this->isFree()){
+            
+            return 0; // Free courses have an effective price of 0
+        }
+        if($this->hasDiscount()){
+            return $this->discount_price;
+        }
+        return $this->selling_price;
+     }
 
+    public function hasDiscount(){
+        return $this->discount_price !==null && $this->discount_price < $this->selling_price;
+    }
+
+    public function getDiscountPercentageAttribute(){
+        if($this->hasDiscount() && $this->selling_price>0){
+            return round((($this->selling_price - $this->discount_price) / $this->selling_price) * 100);
+        }
+        return 0;
+    }
+    public function isFree(){
+        return $this->selling_price > 0&& $this->selling_price == $this->discount_price;
+    }
 }

@@ -118,5 +118,6 @@
 </script>
 
 <script src="{{ asset('/frontend/js/wishList.js') }}"></script>
+<script src="{{ asset('/frontend/js/cart.js') }}"></script>
 </body>
 </html>

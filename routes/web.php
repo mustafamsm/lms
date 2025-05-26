@@ -1,15 +1,16 @@
 <?php
 
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Backend\CourseController;
-use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Frontend\IndexController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Frontend\WishListController;
-use App\Models\Course;
 
 /*
 |--------------------------------------------------------------------------
@@ -169,3 +170,7 @@ Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');
 Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
     ->name('instructor.register');
+
+    //cart routes
+    Route::post('/cart/data/store/{id}',[CartController::class,'AddToCart']);
+    Route::get('/cart/data/',[CartController::class,'CartData']);
