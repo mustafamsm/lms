@@ -106,12 +106,16 @@
                                         <ul class="cat-dropdown-menu">
                                             @foreach ($categoires as $cat)
                                                 <li>
-                                                    <a href="{{route('category.details',$cat->category_slug)}}">{{ $cat->category_name }} <i
-                                                            class="la la-angle-right"></i></a>
+                                                    <a href="{{ route('category.details', $cat->category_slug) }}">{{ $cat->category_name }}
+                                                        <i class="la la-angle-right"></i></a>
                                                     <ul class="sub-menu">
-                                                        <li><a href="{{route('category.details',$cat->category_slug)}}">All {{ $cat->category_name }}</a></li>
+                                                        <li><a
+                                                                href="{{ route('category.details', $cat->category_slug) }}">All
+                                                                {{ $cat->category_name }}</a></li>
                                                         @foreach ($cat->subcategories as $sub)
-                                                            <li><a href="{{route('subcategory.details',$sub->category_slug)}}">{{ $sub->category_name }}</a></li>
+                                                            <li><a
+                                                                    href="{{ route('subcategory.details', $sub->category_slug) }}">{{ $sub->category_name }}</a>
+                                                            </li>
                                                         @endforeach
 
                                                     </ul>
@@ -148,45 +152,25 @@
                                     </li>
                                 </ul><!-- end ul -->
                             </nav><!-- end main-menu -->
+
                             <div class="shop-cart mr-4">
                                 <ul>
                                     <li>
                                         <p class="shop-cart-btn d-flex align-items-center">
                                             <i class="la la-shopping-cart"></i>
-                                            <span class="product-count">2</span>
+                                            <span class="product-count" id="cartQty"></span>
                                         </p>
                                         <ul class="cart-dropdown-menu">
-                                            <li class="media media-card">
-                                                <a href="shopping-cart.html" class="media-img">
-                                                    <img src="{{ asset('frontend/images/small-img.jpg') }}"
-                                                        alt="Cart image">
-                                                </a>
-                                                <div class="media-body">
-                                                    <h5><a href="course-details.html">The Complete JavaScript Course
-                                                            2021: From Zero to Expert!</a></h5>
-                                                    <span class="d-block lh-18 py-1">Kamran Ahmed</span>
-                                                    <p class="text-black font-weight-semi-bold lh-18">$12.99 <span
-                                                            class="before-price fs-14">$129.99</span></p>
-                                                </div>
-                                            </li>
-                                            <li class="media media-card">
-                                                <a href="shopping-cart.html" class="media-img">
-                                                    <img src="{{ asset('frontend/images/small-img.jpg') }}"
-                                                        alt="Cart image">
-                                                </a>
-                                                <div class="media-body">
-                                                    <h5><a href="course-details.html">The Complete JavaScript Course
-                                                            2021: From Zero to Expert!</a></h5>
-                                                    <span class="d-block lh-18 py-1">Kamran Ahmed</span>
-                                                    <p class="text-black font-weight-semi-bold lh-18">$12.99 <span
-                                                            class="before-price fs-14">$129.99</span></p>
-                                                </div>
-                                            </li>
+
+                                            <div id="miniCart"></div>
+
                                             <li class="media media-card">
                                                 <div class="media-body fs-16">
-                                                    <p class="text-black font-weight-semi-bold lh-18">Total: <span
-                                                            class="cart-total">$12.99</span> <span
-                                                            class="before-price fs-14">$129.99</span></p>
+                                                    <p class="text-block font-weight-semi-bold lh-18">Total: <span
+                                                            class="cart-total" id="cartSubTotal"></span>
+
+
+                                                    </p>
                                                 </div>
                                             </li>
                                             <li>

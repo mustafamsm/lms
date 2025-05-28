@@ -35,23 +35,31 @@ class CartController extends Controller
                 'image' => $course->course_image,
                 'slug' => $request->course_name_slug,
                 'instructor' => $request->instructor,
+                
             ]
         ]);
         return response()->json(['success' => ' Successfully Added on your Cart']);
         
     }
 
-    public function CartData()
+    public function AddMiniCart()
     {
  
-        $cartItems = Cart::content();
+        $carts = Cart::content();
         $cartTotal = Cart::total();
         $cartCount = Cart::count();
 
+
+         
         return response()->json([
-            'cartItems' => $cartItems,
+            'carts' => $carts,
             'cartTotal' => $cartTotal,
             'cartCount' => $cartCount,
         ]);
+    }
+
+    public function RemoveMiniCart($rowId){
+        Cart::remove($rowId);
+        return response()->json(['success'=>'Course Removeed from cart']);
     }
 }

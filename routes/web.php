@@ -173,4 +173,5 @@ Route::post('/instructor/register', [AdminController::class, 'InstructorRegister
 
     //cart routes
     Route::post('/cart/data/store/{id}',[CartController::class,'AddToCart']);
-    Route::get('/cart/data/',[CartController::class,'CartData']);
+     Route::get('/course/mini/cart',[CartController::class,'AddMiniCart'])->name('mini.cart');
+     Route::delete('/minicart/course/remove/{rowId}',[CartController::class,'RemoveMiniCart'])->name('mini.cart.remove');
