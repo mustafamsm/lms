@@ -44,9 +44,9 @@ Route::middleware(['auth', 'roles:user'])->group(function () {
     Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])
         ->name('user.password.update');
 
-     Route::get('user/wishlist',[WishListController::class,'AllWishlist'])->name('user.wishlist');
-     Route::delete('remove-from-wishlist/{id}',[WishListController::class,'removeFromWishlist']);
- }); 
+    Route::get('user/wishlist', [WishListController::class, 'AllWishlist'])->name('user.wishlist');
+    Route::delete('remove-from-wishlist/{id}', [WishListController::class, 'removeFromWishlist']);
+});
 
 
 require __DIR__ . '/auth.php';
@@ -118,12 +118,12 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
         ->name('instructor.password.update');
 
     Route::controller(CourseController::class)->group(function () {
-        Route::get('/all/course','index')->name('all.course');
-        Route::get('/add/course','create')->name('add.course');
-        Route::post('/store/course','store')->name('store.course');
-        Route::get('/edit/course/{id}','edit')->name('edit.course');
-        Route::put('/update/course/{id}','update')->name('update.course');
-        Route::delete('/course/{id}','destroy')->name('delete.course');
+        Route::get('/all/course', 'index')->name('all.course');
+        Route::get('/add/course', 'create')->name('add.course');
+        Route::post('/store/course', 'store')->name('store.course');
+        Route::get('/edit/course/{id}', 'edit')->name('edit.course');
+        Route::put('/update/course/{id}', 'update')->name('update.course');
+        Route::delete('/course/{id}', 'destroy')->name('delete.course');
 
         Route::put('/update/course/image/{id}', 'updateCourseImage')
             ->name('update.course.image');
@@ -136,7 +136,7 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
         Route::put('/goals/{id}', [CourseController::class, 'updateGoal'])->name('update.goal');
 
 
-        Route::get('/subcategory/ajax/{category_id}','GetSubCategory')->name('get.subcategory');
+        Route::get('/subcategory/ajax/{category_id}', 'GetSubCategory')->name('get.subcategory');
     });
     //course lecture routes
     Route::controller(CourseController::class)->group(function () {
@@ -147,31 +147,33 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
             ->name('store.course.lecture');
         Route::get('/lecture/edit/{id}', 'EditLecture')
             ->name('edit.lecture');
-        Route::put('/lecture/update/{id}','UpdateLecture')
-        ->name('update.lecture');
+        Route::put('/lecture/update/{id}', 'UpdateLecture')
+            ->name('update.lecture');
         Route::delete('/lecture/delete/{id}', 'DeleteLecture')
             ->name('delete.lecture');
-        Route::delete('/section/delete/{id}','DeleteSection')  
-        ->name('delete.section');  
+        Route::delete('/section/delete/{id}', 'DeleteSection')
+            ->name('delete.section');
     });
-
-});// end instructor routes group middleware
+}); // end instructor routes group middleware
 
 //home page routes
 Route::get('/instructor/login', [InstructorController::class, 'login'])
     ->name('instructor.login');
-    Route::get('/course/details/{id}/{slug}',[IndexController::class,'CourseDetails']);
-Route::get('/category/courses/{slug}',[IndexController::class,'CategoryCourse'])->name('category.details');
-Route::get('/subcategory/courses/{slug}',[IndexController::class,'SubCategoryCourse'])->name('subcategory.details');
-Route::get('/instructor/details/{instructor}',[IndexController::class,'InstructorDetails'])->name('instructor.details');
+Route::get('/course/details/{id}/{slug}', [IndexController::class, 'CourseDetails']);
+Route::get('/category/courses/{slug}', [IndexController::class, 'CategoryCourse'])->name('category.details');
+Route::get('/subcategory/courses/{slug}', [IndexController::class, 'SubCategoryCourse'])->name('subcategory.details');
+Route::get('/instructor/details/{instructor}', [IndexController::class, 'InstructorDetails'])->name('instructor.details');
 //wishlist ajax route
-Route::post('/add-to-wishlist/{id}',[WishListController::class,'AddToWishList']);
+Route::post('/add-to-wishlist/{id}', [WishListController::class, 'AddToWishList']);
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
     ->name('become.instructor');
 Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
     ->name('instructor.register');
 
-    //cart routes
-    Route::post('/cart/data/store/{id}',[CartController::class,'AddToCart']);
-     Route::get('/course/mini/cart',[CartController::class,'AddMiniCart'])->name('mini.cart');
-     Route::delete('/minicart/course/remove/{rowId}',[CartController::class,'RemoveMiniCart'])->name('mini.cart.remove');
+//cart routes
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+Route::get('/course/mini/cart', [CartController::class, 'AddMiniCart'])->name('mini.cart');
+Route::delete('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveMiniCart'])->name('mini.cart.remove');
+Route::get('/mycart', [CartController::class, 'MyCart'])->name('mycart');
+Route::get('/get-cart-course',[CartController::class,'GetCartCourse']);
+Route::delete('/cart-remove/{rowId}',[cartController::class,'CartRemove']);

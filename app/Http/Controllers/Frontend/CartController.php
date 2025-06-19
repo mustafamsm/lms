@@ -25,7 +25,7 @@ class CartController extends Controller
         // }
         // Determine the price to add to the cart using the effective_price accessor
         $priceToAddToCart = $course->effective_price;
-         Cart::add([
+        Cart::add([
             'id' => $id,
             'name' => $request->course_name,
             'qty' => 1,
@@ -35,22 +35,21 @@ class CartController extends Controller
                 'image' => $course->course_image,
                 'slug' => $request->course_name_slug,
                 'instructor' => $request->instructor,
-                
+
             ]
         ]);
         return response()->json(['success' => ' Successfully Added on your Cart']);
-        
     }
 
     public function AddMiniCart()
     {
- 
+
         $carts = Cart::content();
         $cartTotal = Cart::total();
         $cartCount = Cart::count();
 
 
-         
+
         return response()->json([
             'carts' => $carts,
             'cartTotal' => $cartTotal,
@@ -58,8 +57,33 @@ class CartController extends Controller
         ]);
     }
 
-    public function RemoveMiniCart($rowId){
+    public function RemoveMiniCart($rowId)
+    {
         Cart::remove($rowId);
-        return response()->json(['success'=>'Course Removeed from cart']);
+        return response()->json(['success' => 'Course Removeed from cart']);
+    }
+
+    public function MyCart()
+    {
+        return view('frontend.mycart.view_mycart');
+    }
+    public function GetCartCourse()
+    {
+        $carts = Cart::content();
+        $cartTotal = Cart::total();
+        $cartCount = Cart::count();
+
+
+
+        return response()->json([
+            'carts' => $carts,
+            'cartTotal' => $cartTotal,
+            'cartCount' => $cartCount,
+        ]);
+    }
+    public function CartRemove($rowId)
+    {
+        Cart::remove($rowId);
+        return response()->json(['success' => 'Course Removeed from cart']);
     }
 }
