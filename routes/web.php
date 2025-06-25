@@ -94,6 +94,15 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::post('/update/user/status', 'UpdateUserStatus')
             ->name('update.user.status');
     });
+
+
+    //course all routes
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/admin/all/course', 'AdminAllCourse')->name('admin.all.course');
+        Route::post('update/course/status', 'UpdateCourseStatus')->name('update.course.status');
+        Route::get('/admin/course/details/{id}', 'AdminCourseDetails')
+            ->name('admin.course.details');
+    });
 });
 Route::get('/admin/login', [AdminController::class, 'login'])
     ->name('admin.login');
@@ -175,5 +184,5 @@ Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
 Route::get('/course/mini/cart', [CartController::class, 'AddMiniCart'])->name('mini.cart');
 Route::delete('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveMiniCart'])->name('mini.cart.remove');
 Route::get('/mycart', [CartController::class, 'MyCart'])->name('mycart');
-Route::get('/get-cart-course',[CartController::class,'GetCartCourse']);
-Route::delete('/cart-remove/{rowId}',[cartController::class,'CartRemove']);
+Route::get('/get-cart-course', [CartController::class, 'GetCartCourse']);
+Route::delete('/cart-remove/{rowId}', [cartController::class, 'CartRemove']);

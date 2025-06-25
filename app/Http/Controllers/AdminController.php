@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -155,5 +156,33 @@ class AdminController extends Controller
         } else {
             return response()->json(['error' => 'User not found.'], 404);
         }
+    }
+
+
+
+    public function AdminAllCourse(){
+        $course = Course::withoutGlobalScope('active')->latest()->get();
+        return view('admin.backend.courses.all_course',compact('course'));
+    }
+
+
+
+    public function UpdateCourseStatus(Request $request)
+    {
+        $course = Course::withoutGlobalScope('active')->find($request->course_id);
+ 
+        $status = $request->input('status', 0);
+        if ($course) {
+            $course->status = $status;
+            $course->save();
+            return response()->json(['message' => 'Status updated successfully.']);
+        } else {
+            return response()->json(['error' => 'Course not found.'], 404);
+        }
+    }
+
+    public function AdminCourseDetails($id){
+        $course = Course::withoutGlobalScope('active')->findOrFail($id);
+        return view('admin.backend.courses.course_details', compact('course'));
     }
 }
